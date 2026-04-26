@@ -309,7 +309,11 @@ The confidence scoring worked well directionally — emergencies scored highest 
 One instance where AI gave a helpful suggestion: when structuring the RAG pipeline, the suggestion to separate `retrieve_info`, `detect_intent`, and `compute_confidence` into distinct functions made the code far easier to test individually. One instance where AI's suggestion was flawed: an early suggestion to use `re.findall` for keyword matching introduced false positives (e.g., "play" matching "display"). Replacing it with exact substring matching on the lowercased query resolved this cleanly.
 
 ---
+## What This Project Says About Me as an AI Engineer
 
+PawPal+ reflects how I approach problem-solving: I start with something real and useful, then make it smarter and more reliable incrementally. I didn't just add AI for the sake of it — I built a RAG pipeline that actively grounds every response in retrieved knowledge, added guardrails for safety, and proved it works with 24 automated tests. I care about systems that are explainable and trustworthy, not just functional. This project shows I can take a prototype, identify its weaknesses, and engineer solutions to them — and that I think critically about what responsible AI actually looks like in practice.
+
+---
 ## File Structure
 
 ```
