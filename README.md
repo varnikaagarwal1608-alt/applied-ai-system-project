@@ -294,11 +294,14 @@ One instance where AI gave a helpful suggestion: when structuring the RAG pipeli
 
 ## File Structure
 
-```
-pawpal/
-├── app.py              # Streamlit UI
-├── ai_helper.py        # RAG engine (retrieval, intent, confidence, logging)
-├── pawpal_system.py    # Data models: Owner, Pet, Task, Scheduler
-├── test_pawpal.py      # Automated test harness
-└── README.md           # This file
-```
+applied-ai-system-project/
+├── assets/
+│   └── architecture.png    # System architecture diagram
+├── .gitignore
+├── README.md               # This file
+├── ai_helper.py            # RAG engine (retrieval, intent, confidence, logging)
+├── app.py                  # Streamlit UI
+├── main.py                 # Entry point / demo script
+├── pawpal_system.py        # Data models: Owner, Pet, Task, Scheduler
+├── requirements.txt        # Python dependencies
+└── test_pawpal.py          # Automated test harness (24 tests)
