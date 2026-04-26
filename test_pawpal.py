@@ -141,8 +141,18 @@ check(
 high_tasks = [t for t in schedule if t.priority == "HIGH"]
 check("HIGH priority task included", len(high_tasks) >= 1)
 
-# Conflict detection: Walk (09:00–09:30) and Play (09:15–10:00) should conflict
-conflicts = scheduler.detect_conflicts()
+# Conflict detection: test directly using detect_conflicts on known overlapping tasks
+# Walk 09:00-09:30 vs Play 09:15-10:00 — force them into daily_plan directly
+owner_c = Owner("Conflict Test", available_time=200, preferences={})
+dog_c = Pet("Rex", "Dog", 2)
+owner_c.add_pet(dog_c)
+tc1 = Task("Walk", 30, "HIGH", "daily", time="09:00", pet=dog_c)
+tc2 = Task("Play", 45, "LOW",  "daily", time="09:15", pet=dog_c)
+dog_c.add_task(tc1)
+dog_c.add_task(tc2)
+sched_c = Scheduler(owner_c)
+sched_c.generate_schedule()
+conflicts = sched_c.detect_conflicts()
 check("Conflict detected between Walk & Play", len(conflicts) >= 1,
       f"{len(conflicts)} conflict(s) found")
 

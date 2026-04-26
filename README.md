@@ -2,6 +2,8 @@
 
 > An AI-powered pet care planning assistant with Retrieval-Augmented Generation (RAG)
 
+🎥 **Video Walkthrough:** [Add Loom link here]
+
 ---
 
 ## Original Project Summary
@@ -24,35 +26,44 @@ The system is designed for everyday pet owners who want one place to manage thei
 
 ## Architecture Overview
 
+```mermaid
+flowchart TD
+    A([User Input
+Streamlit UI - app.py]) --> B{Split}
+
+    B --> C[Scheduler Pipeline
+pawpal_system.py]
+    B --> D[detect_intent
+ai_helper.py]
+
+    C --> E[Data Models
+Owner → Pet → Task]
+    E --> F[generate_schedule
+Priority sort + time budget]
+    F --> G[detect_conflicts
+Overlap detection]
+
+    D -->|emergency| H[⚠️ Guardrail
+Skip retrieval, warn user]
+    D -->|normal| I[retrieve_info
+Keyword search PET_KNOWLEDGE]
+    I --> J[PET_KNOWLEDGE
+12 curated topics]
+    J --> I
+    I --> K[Build Response
+Context + confidence score]
+
+    G --> L([Results to UI
+Schedule + conflicts])
+    K --> L
+    H --> L
+
+    T([test_pawpal.py
+24 automated tests]) -.->|validates| C
+    T -.->|validates| D
 ```
-User Input (Streamlit UI)
-        │
-        ├──► Scheduler Pipeline
-        │         │
-        │    pawpal_system.py
-        │    Owner → Pets → Tasks
-        │         │
-        │    Scheduler.generate_schedule()
-        │    Scheduler.detect_conflicts()
-        │         │
-        │    Schedule Table + Conflict Warnings
-        │
-        └──► RAG AI Pipeline (ai_helper.py)
-                  │
-             detect_intent(query)
-                  │
-            [emergency?] ──► Guardrail response (skip retrieval)
-                  │
-             retrieve_info(query)        ← keyword-scored retrieval
-             (searches PET_KNOWLEDGE)
-                  │
-             top-3 chunks selected
-                  │
-             response = grounded answer  ← augmented with retrieved context
-             confidence = f(chunks, score)
-                  │
-             Response + Intent + Confidence → UI
-```
+
+User input enters through the Streamlit UI and splits into two parallel pipelines. The **scheduler pipeline** takes pets and tasks through `pawpal_system.py`, runs priority sorting, generates a schedule, and detects conflicts. The **RAG AI pipeline** detects intent, fires an emergency guardrail if needed, otherwise retrieves matching knowledge chunks from `PET_KNOWLEDGE`, and builds a grounded response with a confidence score. Both pipelines return results to the UI. A separate `test_pawpal.py` harness validates both pipelines automatically.
 
 **Components:**
 
@@ -78,6 +89,12 @@ User Input (Streamlit UI)
 
 ```bash
 pip install streamlit
+```
+
+Or use the included requirements file:
+
+```bash
+pip install -r requirements.txt
 ```
 
 ### Run the app
@@ -276,7 +293,7 @@ python test_pawpal.py
 
 ---
 
-## Reflection & Ethics
+## Reflection
 
 **Limitations and biases:**
 The knowledge base was written manually and reflects general Western pet care norms. It may not cover all breeds, regional vet practices, or non-English-speaking contexts. Keyword matching can fail on phrasing variations or typos.
@@ -294,14 +311,17 @@ One instance where AI gave a helpful suggestion: when structuring the RAG pipeli
 
 ## File Structure
 
+```
 applied-ai-system-project/
 ├── assets/
 │   └── architecture.png    # System architecture diagram
 ├── .gitignore
-├── README.md               # This file
+├── README.md               # Project documentation
+├── model_card.md           # AI reflection, biases, testing results
 ├── ai_helper.py            # RAG engine (retrieval, intent, confidence, logging)
 ├── app.py                  # Streamlit UI
 ├── main.py                 # Entry point / demo script
 ├── pawpal_system.py        # Data models: Owner, Pet, Task, Scheduler
 ├── requirements.txt        # Python dependencies
 └── test_pawpal.py          # Automated test harness (24 tests)
+```

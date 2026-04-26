@@ -145,29 +145,24 @@ class Scheduler:
         return [t for t in self.tasks_list if t.completed == completed]
 
     def detect_conflicts(self) -> List[tuple]:
-        """Detect overlapping tasks. Skips tasks with no time set or same object."""
+        """Detect overlapping tasks. Skips tasks with no time set."""
         def time_to_minutes(t: str) -> int:
             h, m = map(int, t.split(":"))
             return h * 60 + m
 
-        # Deduplicate by object identity first
-        seen = []
-        for t in self.daily_plan:
-            if t.time and t not in seen:
-                seen.append(t)
-
+        timed_tasks = [t for t in self.daily_plan if t.time]
         conflicts = []
-        for t1, t2 in combinations(seen, 2):
-            # Skip if it's literally the same task object
-            if t1 is t2:
-                continue
-            try:
-                start1 = time_to_minutes(t1.time)
-                end1 = start1 + t1.duration
-                start2 = time_to_minutes(t2.time)
-                end2 = start2 + t2.duration
-                if start1 < end2 and start2 < end1:
-                    conflicts.append((t1, t2))
-            except Exception:
-                continue
+        for i in range(len(timed_tasks)):
+            for j in range(i + 1, len(timed_tasks)):
+                t1 = timed_tasks[i]
+                t2 = timed_tasks[j]
+                try:
+                    start1 = time_to_minutes(t1.time)
+                    end1 = start1 + t1.duration
+                    start2 = time_to_minutes(t2.time)
+                    end2 = start2 + t2.duration
+                    if start1 < end2 and start2 < end1:
+                        conflicts.append((t1, t2))
+                except Exception:
+                    continue
         return conflicts
