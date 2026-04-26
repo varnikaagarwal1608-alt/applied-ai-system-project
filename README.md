@@ -2,9 +2,10 @@
 
 > An AI-powered pet care planning assistant with Retrieval-Augmented Generation (RAG)
 
-🎥 **Video Walkthrough:** [Add Loom link here]
+🎥 **Video Walkthrough:** [watch through LOOM]
+https://www.loom.com/share/90d2b0f283a7418e9e29bcbe47540f5f
 
----
+
 
 ## Original Project Summary
 
